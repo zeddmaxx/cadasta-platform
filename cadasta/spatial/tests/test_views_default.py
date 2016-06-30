@@ -658,6 +658,32 @@ class TenureRelationshipAddTest(TestCase):
         self.project = ProjectFactory.create()
         self.spatial_unit = SpatialUnitFactory(project=self.project)
 
+        content_type = ContentType.objects.get(
+            app_label='party', model='tenurerelationship')
+        schema = Schema.objects.create(
+            content_type=content_type,
+            selectors=(self.project.organization.id, self.project.id, ))
+        attr_type = AttributeType.objects.get(name='text')
+        Attribute.objects.create(
+            schema=schema,
+            name='r_name', long_name='Relationship field',
+            attr_type=attr_type, index=0,
+            required=False, omit=False
+        )
+
+        content_type = ContentType.objects.get(
+            app_label='party', model='party')
+        schema = Schema.objects.create(
+            content_type=content_type,
+            selectors=(self.project.organization.id, self.project.id, ))
+        attr_type = AttributeType.objects.get(name='text')
+        Attribute.objects.create(
+            schema=schema,
+            name='p_name', long_name='Party field',
+            attr_type=attr_type, index=0,
+            required=False, omit=False
+        )
+
     def get_url_kwargs(self):
         return {
             'organization': self.project.organization.slug,
@@ -674,7 +700,9 @@ class TenureRelationshipAddTest(TestCase):
             'id': '',
             'name': 'The Beatles',
             'party_type': 'GR',
-            'tenure_type': 'CU'
+            'tenure_type': 'CU',
+            'party::p_name': 'Party Name',
+            'relationship::r_name': 'Rel Name'
         }
 
     def get_template_context(self):
@@ -682,7 +710,15 @@ class TenureRelationshipAddTest(TestCase):
                 'location': self.spatial_unit,
                 'form': forms.TenureRelationshipForm(
                     project=self.project,
-                    spatial_unit=self.spatial_unit),
+                    spatial_unit=self.spatial_unit,
+                    schema_selectors=(
+                        {'name': 'organization',
+                         'value': self.project.organization,
+                         'selector': self.project.organization.id},
+                        {'name': 'project',
+                         'value': self.project,
+                         'selector': self.project.id}
+                    )),
                 'geojson': json.dumps(SpatialUnitGeoJsonSerializer(
                     [self.spatial_unit], many=True).data)
                 }
@@ -721,7 +757,11 @@ class TenureRelationshipAddTest(TestCase):
                 self.expected_success_url + '#relationships')
 
         assert TenureRelationship.objects.count() == 1
+        rel = TenureRelationship.objects.first()
+        assert rel.attributes.get('r_name') == 'Rel Name'
         assert Party.objects.count() == 1
+        party = Party.objects.first()
+        assert party.attributes.get('p_name') == 'Party Name'
 
     def test_post_with_authorized_invalid_data(self):
         response, content = self.request(method='POST',
@@ -734,7 +774,15 @@ class TenureRelationshipAddTest(TestCase):
         context['form'] = forms.TenureRelationshipForm(
             project=self.project,
             spatial_unit=self.spatial_unit,
-            data=data)
+            data=data,
+            schema_selectors=(
+                {'name': 'organization',
+                 'value': self.project.organization,
+                 'selector': self.project.organization.id},
+                {'name': 'project',
+                 'value': self.project,
+                 'selector': self.project.id}
+            ))
         expected = render_to_string(
             self.template, context, request=self.request)
         assert content == expected

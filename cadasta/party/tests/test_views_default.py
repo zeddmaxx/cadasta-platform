@@ -608,8 +608,20 @@ class PartyRelationshipDetailTest(TestCase):
 
     def set_up_models(self):
         self.project = ProjectFactory.create()
+        content_type = ContentType.objects.get(
+            app_label='party', model='tenurerelationship')
+        schema = Schema.objects.create(
+            content_type=content_type,
+            selectors=(self.project.organization.id, self.project.id, ))
+        attr_type = AttributeType.objects.get(name='text')
+        Attribute.objects.create(
+            schema=schema,
+            name='fname', long_name='Test field',
+            attr_type=attr_type, index=0,
+            required=False, omit=False
+        )
         self.relationship = TenureRelationshipFactory.create(
-            project=self.project)
+            project=self.project, attributes={'fname': 'test'})
 
     def assign_policies(self):
         assign_policies(self.authorized_user)
@@ -618,6 +630,7 @@ class PartyRelationshipDetailTest(TestCase):
         return {'object': self.project,
                 'relationship': self.relationship,
                 'location': self.relationship.spatial_unit,
+                'attributes': (('Test field', 'test', ), ),
                 'geojson': '{"type": "FeatureCollection", "features": []}'}
 
     def get_url_kwargs(self):
@@ -658,12 +671,24 @@ class PartyRelationshipEditTest(TestCase):
     view = default.PartyRelationshipEdit
     template = 'party/relationship_edit.html'
     success_url_name = 'parties:relationship_detail'
-    post_data = {'tenure_type': 'LH'}
+    post_data = {'tenure_type': 'LH', 'attributes::fname': 'New text'}
 
     def set_up_models(self):
         self.project = ProjectFactory.create()
+        content_type = ContentType.objects.get(
+            app_label='party', model='tenurerelationship')
+        schema = Schema.objects.create(
+            content_type=content_type,
+            selectors=(self.project.organization.id, self.project.id, ))
+        attr_type = AttributeType.objects.get(name='text')
+        Attribute.objects.create(
+            schema=schema,
+            name='fname', long_name='Test field',
+            attr_type=attr_type, index=0,
+            required=False, omit=False
+        )
         self.relationship = TenureRelationshipFactory.create(
-            project=self.project)
+            project=self.project, attributes={'fname': 'test'})
 
     def assign_policies(self):
         assign_policies(self.authorized_user)
@@ -719,6 +744,7 @@ class PartyRelationshipEditTest(TestCase):
 
         self.relationship.refresh_from_db()
         assert self.relationship.tenure_type_id == 'LH'
+        assert self.relationship.attributes.get('fname') == 'New text'
 
     def test_post_with_unauthorized_user(self):
         response = self.request(method='POST', user=self.unauthorized_user)

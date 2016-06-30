@@ -35,12 +35,13 @@ class PartyFormTest(TestCase):
         schema = Schema.objects.create(
             content_type=content_type,
             selectors=(project.organization.id, project.id, ))
-        attr_type = AttributeType.objects.get(name='text')
+
         Attribute.objects.create(
             schema=schema,
-            name='fname', long_name='Test field',
-            attr_type=attr_type, index=0,
-            required=False, omit=False
+            name='fname',
+            long_name='Test field',
+            attr_type=AttributeType.objects.get(name='text'),
+            index=0
         )
 
         form = forms.PartyForm(project_id=project.id,
@@ -63,7 +64,7 @@ class PartyFormTest(TestCase):
 
 class TenureRelationshipEditFormTest(TestCase):
     def test_init(self):
-        form = forms.TenureRelationshipEditForm()
+        form = forms.TenureRelationshipEditForm(schema_selectors=())
         tenure_types = TenureRelationshipType.objects.values_list('id',
                                                                   'label')
         assert list(form.fields['tenure_type'].choices) == list(tenure_types)

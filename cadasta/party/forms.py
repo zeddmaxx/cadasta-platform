@@ -1,4 +1,3 @@
-from django import forms
 from core.forms import AttributeModelForm
 from .models import Party, TenureRelationshipType, TenureRelationship
 
@@ -21,7 +20,9 @@ class PartyForm(AttributeModelForm):
         return instance
 
 
-class TenureRelationshipEditForm(forms.ModelForm):
+class TenureRelationshipEditForm(AttributeModelForm):
+    attributes_field = 'attributes'
+
     class Meta:
         model = TenureRelationship
         fields = ['tenure_type']

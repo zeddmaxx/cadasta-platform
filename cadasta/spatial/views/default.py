@@ -145,3 +145,18 @@ class TenureRelationshipAdd(LoginPermissionRequiredMixin,
     def get_success_url(self):
         return (reverse('locations:detail', kwargs=self.kwargs) +
                 '#relationships')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        prj = self.get_project()
+
+        kwargs['schema_selectors'] = (
+            {'name': 'organization',
+             'value': prj.organization,
+             'selector': prj.organization.id},
+            {'name': 'project',
+             'value': prj,
+             'selector': prj.id}
+        )
+
+        return kwargs

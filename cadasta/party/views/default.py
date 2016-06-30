@@ -92,11 +92,13 @@ class PartyResourcesNew(LoginPermissionRequiredMixin,
 
 
 class PartyRelationshipDetail(LoginPermissionRequiredMixin,
+                              JsonAttrsMixin,
                               mixins.PartyRelationshipObjectMixin,
                               generic.DetailView):
     template_name = 'party/relationship_detail.html'
     permission_required = 'tenure_rel.view'
     permission_denied_message = error_messages.TENURE_REL_VIEW
+    attributes_field = 'attributes'
 
 
 class PartyRelationshipEdit(LoginPermissionRequiredMixin,
