@@ -1,8 +1,11 @@
 from django import forms
+from core.forms import AttributeModelForm
 from .models import Party, TenureRelationshipType, TenureRelationship
 
 
-class PartyForm(forms.ModelForm):
+class PartyForm(AttributeModelForm):
+    attributes_field = 'attributes'
+
     class Meta:
         model = Party
         fields = ['name', 'type']

@@ -1,9 +1,8 @@
 import json
 from django.views import generic
 from django.core.urlresolvers import reverse
-from jsonattrs.models import Schema
 
-from core.mixins import LoginPermissionRequiredMixin
+from core.mixins import LoginPermissionRequiredMixin, JsonAttrsMixin
 
 from resources.forms import AddResourceFromLibraryForm
 from party.models import TenureRelationship
@@ -48,20 +47,6 @@ class LocationsAdd(LoginPermissionRequiredMixin,
         )
 
         return kwargs
-
-
-class JsonAttrsMixin:
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        obj = self.object
-        field = self.attributes_field
-        obj_attrs = getattr(obj, field)
-
-        schemas = Schema.objects.from_instance(obj)
-        attrs = [a for s in schemas for a in s.attributes.all()]
-        context[field] = [(a.long_name, obj_attrs.get(a.name, '—'))
-                          for a in attrs if not a.omit]
-        return context
 
 
 class LocationDetail(LoginPermissionRequiredMixin,
