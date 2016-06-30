@@ -1,6 +1,8 @@
 import pytest
 from django.test import TestCase
 from django.forms import ValidationError
+from django.contrib.contenttypes.models import ContentType
+from jsonattrs.models import Attribute, AttributeType, Schema
 
 from organization.tests.factories import ProjectFactory
 from party.tests.factories import PartyFactory
@@ -22,11 +24,55 @@ class LocationFormTest(TestCase):
             'type': 'CB'
         }
         project = ProjectFactory.create()
-        form = forms.LocationForm(project_id=project.id, data=data)
+        form = forms.LocationForm(project_id=project.id,
+                                  data=data,
+                                  schema_selectors=())
         form.is_valid()
         form.save()
 
         assert SpatialUnit.objects.filter(project=project).count() == 1
+
+    def test_create_location_with_attributes(self):
+        data = {
+            'geometry': '{"type": "Polygon","coordinates": [[[-0.1418137550354'
+                        '004,51.55240622205599],[-0.14117002487182617,51.55167'
+                        '905819532],[-0.1411914825439453,51.55181915488898],[-'
+                        '0.1411271095275879,51.55254631651022],[-0.14181375503'
+                        '54004,51.55240622205599]]]}',
+            'type': 'CB',
+            'attributes::fname': 'test'
+        }
+
+        project = ProjectFactory.create()
+        content_type = ContentType.objects.get(
+            app_label='spatial', model='spatialunit')
+        schema = Schema.objects.create(
+            content_type=content_type,
+            selectors=(project.organization.id, project.id, ))
+        attr_type = AttributeType.objects.get(name='text')
+        Attribute.objects.create(
+            schema=schema,
+            name='fname', long_name='Test field',
+            attr_type=attr_type, index=0,
+            required=False, omit=False
+        )
+
+        form = forms.LocationForm(project_id=project.id,
+                                  data=data,
+                                  schema_selectors=(
+                                    {'name': 'organization',
+                                     'value': project.organization,
+                                     'selector': project.organization.id},
+                                    {'name': 'project',
+                                     'value': project,
+                                     'selector': project.id}
+                                  ))
+        form.is_valid()
+        form.save()
+
+        assert SpatialUnit.objects.filter(project=project).count() == 1
+        unit = SpatialUnit.objects.filter(project=project).first()
+        assert unit.attributes.get('fname') == 'test'
 
 
 class TenureRelationshipFormTest(TestCase):
