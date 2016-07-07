@@ -1,5 +1,3 @@
-import pdb
-
 from core.forms import AttributeModelForm
 
 from .models import Party, TenureRelationship, TenureRelationshipType
@@ -17,8 +15,6 @@ class PartyForm(AttributeModelForm):
         self.project_id = project_id
 
     def save(self):
-        pdb.set_trace()
-        print("FUCK THIS!!!");
         tf = self.fields['type']
         initial = self.initial['type']
         data = self.data['type']
