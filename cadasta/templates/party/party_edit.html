@@ -1,12 +1,17 @@
 {% extends "party/party_detail.html" %}
 {% load i18n %}
+{% load staticfiles %}
+
+{% block extra_script %}
+<script src="{% static 'js/party_edit.js' %}"></script>
+{% endblock %}
 
 {% block modals %}
 <div class="modal-backdrop">
   <div class="modal show" data-backdrop="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <form method="POST"
+        <form id="party-edit-form" method="POST"
               action="{% url 'parties:edit' object.organization.slug object.slug form.instance.id %}">
           <div class="modal-header">
             <a class="close" href="{% url 'parties:detail' object.organization.slug object.slug form.instance.id %}">

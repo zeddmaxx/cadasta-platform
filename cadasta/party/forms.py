@@ -1,5 +1,8 @@
+import pdb
+
 from core.forms import AttributeModelForm
-from .models import Party, TenureRelationshipType, TenureRelationship
+
+from .models import Party, TenureRelationship, TenureRelationshipType
 
 
 class PartyForm(AttributeModelForm):
@@ -14,10 +17,24 @@ class PartyForm(AttributeModelForm):
         self.project_id = project_id
 
     def save(self):
-        instance = super().save(commit=False)
-        instance.project_id = self.project_id
-        instance.save()
-        return instance
+        pdb.set_trace()
+        print("FUCK THIS!!!");
+        tf = self.fields['type']
+        initial = self.initial['type']
+        data = self.data['type']
+        if initial and data:
+            if (tf.has_changed(initial, data)):
+                self.instance.name = self.data['name']
+                self.instance.type = self.data['type']
+                self.instance.attributes = {}
+                # instance = super().save(commit=True)
+                self.instance.save()
+                return None
+        else:
+            instance = super().save(commit=False)
+            instance.project_id = self.project_id
+            instance.save()
+            return instance
 
 
 class TenureRelationshipEditForm(AttributeModelForm):
