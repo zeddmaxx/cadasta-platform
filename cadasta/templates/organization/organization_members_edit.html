@@ -14,7 +14,7 @@
     <!-- Main text  -->
     <div class="col-md-12 main-text">
       <h2>{% trans "Member" %}: <span class="text-capitalize">{{ object.get_display_name }}</span></h2>
-      <form method="POST" action="" class="org-member-edit" novalidate>
+      <form method="POST" action="" class="org-member-edit" data-parsley-validate>
       {% csrf_token %}
         <div class="row">
           <div class="col-md-3">
@@ -30,14 +30,14 @@
                   {{ object.email }}<br>
                   Last login: {{ object.last_login }}<br>
                 </div>
-                <div class="member-role form-group{% if form.org_role.errors %} has-error{% endif %}">
-                  <label for="{{ form.org_role.id_for_label }}">Role</label>
-                  <label class="pull-right control-label">{{ form.org_role.errors }}</label>
+                <div class="form-group member-role{% if form.org_role.errors %} has-error{% endif %}">
+                  <label class="control-label" for="{{ form.org_role.id_for_label }}">{% trans "Role" %}</label>
                   {% if org_admin %}
-                    {% render_field form.org_role class+="form-control" %}
+                    {% render_field form.org_role class+="form-control" data-parsley-required="true" %}
                   {% else %}
-                    {% render_field form.org_role class+="form-control" %}
+                    {% render_field form.org_role class+="form-control" data-parsley-required="true" %}
                   {% endif %}
+                  <div class="error-block">{{ form.org_role.errors }}</div>
                 </div>
                 <div class="btn-full">
                   <button type="button" class="btn btn-danger" name="remove" data-toggle="modal" data-target="#remove_confirm"{% if org_admin %} disabled{% endif %}>
@@ -69,8 +69,16 @@
                     {% for field in form %}
                     {% if field.name != 'org_role' %}
                     <tr>
-                      <td><label for="{{ field.id_for_label }}">{{field.label}}</label></td>
-                      <td>{% render_field field class+="form-control" %}</td>
+                      <td>
+                        <label class="control-label" for="{{ field.id_for_label }}">
+                          {{field.label}}
+                        </label>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {% render_field field class+="form-control" data-parsley-required="true" %}
+                        </div>
+                      </td>
                     </tr>
                     {% endif %}
                     {% endfor %}

@@ -4288,6 +4288,107 @@ ul.resource-actions > li {
   #project-map .btn-wrap .btn-block {
     margin: 0 auto; }
 
+/* =Forms
+-------------------------------------------------------------- */
+/* =Contacts form styling
+-------------------------------------------------------------- */
+tr.contacts-error {
+  background: #fcf8e3; }
+  tr.contacts-error li {
+    padding: 0; }
+  tr.contacts-error + tr td {
+    border-top: none;
+    padding-top: 0;
+    background: #fcf8e3; }
+
+/* =Party selection widget
+-------------------------------------------------------------- */
+#select-party #party-select {
+  width: 100%; }
+
+#select-party .select2 {
+  display: block;
+  margin: 0.5em 0;
+  width: 100% !important; }
+
+#select-party #add-party {
+  padding: 6px 18px; }
+  #select-party #add-party .glyphicon {
+    opacity: 0.5;
+    padding-right: 8px; }
+
+.select2-container .party-name {
+  display: block; }
+
+.select2-container .party-type {
+  display: block;
+  font-size: 0.85em;
+  opacity: 0.75; }
+
+/* =Required field label
+-------------------------------------------------------------- */
+label.required:after {
+  content: "*";
+  color: #d9534f;
+  font-style: normal;
+  padding: 0 3px; }
+
+/* =Parsley client-side validation
+-------------------------------------------------------------- */
+.form-group.has-error {
+  background-color: #fcf8e3;
+  padding: 10px; }
+
+.has-success input,
+.has-success select,
+.has-success textarea {
+  background: url("/static/img/checkmark.png") calc(100% - 8px) 50% no-repeat;
+  padding-right: 36px; }
+
+.has-error input,
+.has-error select,
+.has-error textarea {
+  border: 1px solid #d9534f;
+  background: #fff url("/static/img/cross.png") calc(100% - 8px) 50% no-repeat;
+  padding-right: 36px; }
+
+.has-success select,
+.has-error select {
+  background-position: calc(100% - 20px) 50%; }
+
+.has-error #select2-party-select-container {
+  background: #fff url("/static/img/cross.png") right 50% no-repeat;
+  padding-right: 36px; }
+
+.parsley-errors-list {
+  opacity: 0;
+  transition: all .3s ease-in;
+  -o-transition: all .3s ease-in;
+  -moz-transition: all .3s ease-in;
+  -webkit-transition: all .3s ease-in; }
+
+.parsley-errors-list.filled {
+  opacity: 1; }
+
+.parsley-errors-list, .errorlist {
+  margin: 2px 0 3px;
+  padding: 0; }
+
+ul.parsley-errors-list, ul.errorlist {
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none !important; }
+  ul.parsley-errors-list li, ul.errorlist li {
+    background-color: #fcf8e3;
+    color: #a94442;
+    padding: 2px 8px;
+    display: list-item;
+    list-style-type: disc;
+    list-style-position: inside; }
+
+.well ul.parsley-errors-list li, .well ul.errorlist li {
+  background-color: transparent; }
+
 /* =Leaflet popups
 -------------------------------------------------------------- */
 .leaflet-container {
@@ -6006,6 +6107,9 @@ div.add-btn-btm {
 .form-narrow .alert-full, .narrow .alert-full {
   margin-bottom: 20px; }
 
+.form-narrow .alert-full, .narrow .alert-full {
+  margin-bottom: 20px; }
+
 .translation-wrapper {
   background-color: fuchsia; }
 
@@ -6096,21 +6200,6 @@ h1 .label {
   .nav-tabs a {
     font-size: 12px; } }
 
-/* =Error messaging for forms
--------------------------------------------------------------- */
-.form-group.has-error {
-  background-color: #fcf8e3;
-  padding: 10px; }
-
-ul.errorlist {
-  margin-bottom: 0;
-  padding-left: 0;
-  list-style: none !important; }
-  ul.errorlist li {
-    background-color: #fcf8e3;
-    color: #a94442;
-    padding: 2px 8px; }
-
 /* =Map location details
 -------------------------------------------------------------- */
 .content-single .detail h2 span {
@@ -6119,40 +6208,5 @@ ul.errorlist {
   display: block;
   text-transform: uppercase;
   padding-bottom: 2px; }
-
-/* =Contacts form styling
--------------------------------------------------------------- */
-tr.contacts-error {
-  background: #fcf8e3; }
-  tr.contacts-error li {
-    padding: 0; }
-  tr.contacts-error + tr td {
-    border-top: none;
-    padding-top: 0;
-    background: #fcf8e3; }
-
-/* =Party selection widget
--------------------------------------------------------------- */
-#select-party #party-select {
-  width: 100%; }
-
-#select-party .select2 {
-  display: block;
-  margin: 0.5em 0;
-  width: 100%; }
-
-#select-party #add-party {
-  padding: 6px 18px; }
-  #select-party #add-party .glyphicon {
-    opacity: 0.5;
-    padding-right: 8px; }
-
-.select2-container .party-name {
-  display: block; }
-
-.select2-container .party-type {
-  display: block;
-  font-size: 0.85em;
-  opacity: 0.75; }
 
 /*# sourceMappingURL=../../../../../static/css/main.css.map */
