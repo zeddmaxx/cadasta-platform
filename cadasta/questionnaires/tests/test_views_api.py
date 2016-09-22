@@ -11,6 +11,7 @@ from core.tests.utils.cases import UserTestCase
 from core.tests.utils.files import make_dirs  # noqa
 from accounts.tests.factories import UserFactory
 from organization.tests.factories import OrganizationFactory, ProjectFactory
+from spatial.tests.factories import SpatialUnitFactory
 from ..views import api
 from ..models import Questionnaire
 from .factories import QuestionnaireFactory
@@ -87,10 +88,20 @@ class QuestionnaireDetailTest(APITestCase, UserTestCase, TestCase):
         assert response.status_code == 403
         assert Questionnaire.objects.filter(project=self.prj).count() == 0
 
-    def test_create_invalid_questionnaire(self):  #
+    def test_create_invalid_questionnaire(self):
         data = {'xls_form': get_form('xls-form-invalid')}
         response = self.request(method='PUT', post_data=data, user=self.user)
 
         assert ("Unknown question type 'interger'." in
                 response.content.get('xls_form'))
         assert Questionnaire.objects.filter(project=self.prj).count() == 0
+
+    def test_create_with_blocked_questionnaire_upload(self):
+        SpatialUnitFactory.create(project=self.prj)
+        response = self.request(method='PUT', user=self.user)
+
+        assert response.status_code == 400
+        assert ("Data has already been contributed to this "
+                "project. To ensure data integrity, uploading a "
+                "new questionnaire is diabled for this project." in
+                response.content.get('xls_form'))
