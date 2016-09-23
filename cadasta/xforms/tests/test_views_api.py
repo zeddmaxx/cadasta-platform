@@ -95,7 +95,6 @@ class XFormListTest(APITestCase, UserTestCase, TestCase):
 
         response = self.request(user=self.user)
         assert response.status_code == 200
-        print(response.content)
 
         xml = etree.fromstring(response.content.encode('utf-8'))
         ns = {'xf': 'http://openrosa.org/xforms/xformsList'}
@@ -275,7 +274,9 @@ class XFormSubmissionTest(APITestCase, UserTestCase, TestCase):
         assert response.status_code == 201
 
         party = Party.objects.get(name='Bilbo Baggins')
-        location = SpatialUnit.objects.get(attributes={'name': 'Middle Earth'})
+        location = SpatialUnit.objects.get(
+            attributes={'name': 'Middle Earth',
+                        'infrastructure': ['water', 'food', 'electricity']})
         assert location in party.tenure_relationships.all()
         assert len(location.resources) == 1
         assert location.resources[0] == Resource.objects.get(
