@@ -67,7 +67,7 @@
             {% endif %}
           </div>
           <!-- Info -->
-          <a class="btn btn-info pull-right visible-md-inline visible-lg-inline" aria-label="Info" id="info-link">
+          <a class="btn btn-info pull-right visible-md-inline visible-lg-inline" aria-label="Info" id="info-link" href="#" onclick="inline_manual_player.showPanel();return false;">
             <span class="glyphicon glyphicon-info-sign"></span>
           </a>
           <nav class="nav" role="navigation">
@@ -100,7 +100,7 @@
                 <li class="organizations"><a href="{% url 'organization:list' %}">{% trans "Organizations" %}</a></li>
                 {% if is_superuser %}<li class="users"><a href="{% url 'user:list' %}">{% trans "Users" %}</a></li>{% endif %}
                 <li role="separator" class="divider"></li>
-                <li><a href="http://cadasta.org/platform/"><span class="glyphicon glyphicon-info-sign"></span> {% trans "Information" %}</a></li>
+                <li><a href="#" onclick="inline_manual_player.showPanel();return false;"><span class="glyphicon glyphicon-info-sign"></span> {% trans "Information" %}</a></li>
               </ul>
             </div>
           </nav>
