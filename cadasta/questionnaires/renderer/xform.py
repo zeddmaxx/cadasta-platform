@@ -13,8 +13,17 @@ class XFormRenderer(BaseRenderer):
         children = []
         for q in questions:
             q['type'] = QUESTION_TYPES[q['type']]
+
             if 'options' in q:
                 q['choices'] = q['options']
+
+            bind = {}
+            if q.get('required', False) is True:
+                bind['required'] = 'yes'
+
+            if bind:
+                q['bind'] = bind
+
             children.append(q)
         return children
 

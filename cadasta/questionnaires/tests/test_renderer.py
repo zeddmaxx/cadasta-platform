@@ -9,7 +9,7 @@ class XFormRendererTest(TestCase):
             'name': "tenure_type",
             'label': "What is the social tenure type?",
             'type': "S1",
-            'required': False,
+            'required': True,
             'constraint': None,
             'options': [{
                 'id': "d9pkepyjg4sgaepdytgwkgfv",
@@ -37,6 +37,7 @@ class XFormRendererTest(TestCase):
             elif q['name'] == 'tenure_type':
                 assert q['type'] == 'select one'
                 assert q['choices'] == questions[0]['options']
+                assert q['bind']['required'] == 'yes'
 
     def test_transform_groups(self):
         groups = [{
