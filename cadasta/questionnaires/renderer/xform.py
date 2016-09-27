@@ -20,6 +20,8 @@ class XFormRenderer(BaseRenderer):
             bind = {}
             if q.get('required', False) is True:
                 bind['required'] = 'yes'
+            if q.get('relevant'):
+                bind['relevant'] = q.get('relevant')
 
             if bind:
                 q['bind'] = bind

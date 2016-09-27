@@ -233,19 +233,21 @@ class QuestionManager(models.Manager):
 
         type_dict = {name: code for code, name in instance.TYPE_CHOICES}
 
+        relevant = None
+        required = False
+        bind = dict.get('bind')
+        if bind:
+            relevant = bind.get('relevant', None)
+            required = True if bind.get('required', 'no') == 'yes' else False
+
         instance.type = type_dict[dict.get('type')]
-
-        # try:
-        #     instance.type = type_dict[dict.get('type')]
-        # except KeyError as e:
-        #     errors.append(
-        #         _('{type} is not an accepted question type').format(type=e)
-        #     )
-
         instance.name = dict.get('name')
         instance.label = dict.get('label')
-        instance.required = dict.get('required', False)
+        instance.required = required
         instance.constraint = dict.get('constraint')
+        instance.default = dict.get('default', None)
+        instance.hint = dict.get('hint', None)
+        instance.relevant = relevant
         instance.save()
 
         if instance.has_options:

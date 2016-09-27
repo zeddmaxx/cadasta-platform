@@ -16,9 +16,10 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = ('id', 'name', 'label', 'type', 'required', 'constraint',)
+        fields = ('id', 'name', 'label', 'type', 'required', 'constraint',
+                  'default', 'hint', 'relevant')
         read_only_fields = ('id', 'name', 'label', 'type', 'required',
-                            'constraint',)
+                            'constraint', 'default', 'hint', 'relevant')
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

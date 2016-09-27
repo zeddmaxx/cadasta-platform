@@ -200,7 +200,13 @@ class QuestionManagerTest(TestCase):
             'hint': 'For this field (type=integer)',
             'label': 'Integer',
             'name': 'my_int',
-            'type': 'integer'
+            'type': 'integer',
+            'default': 'default val',
+            'hint': 'An informative hint',
+            'bind': {
+                'relevant': '${party_id}="abc123"',
+                'required': 'yes'
+            }
         }
         questionnaire = factories.QuestionnaireFactory.create()
 
@@ -214,6 +220,10 @@ class QuestionManagerTest(TestCase):
         assert model.label == question_dict['label']
         assert model.name == question_dict['name']
         assert model.type == 'IN'
+        assert model.default == 'default val'
+        assert model.hint == 'An informative hint'
+        assert model.relevant == '${party_id}="abc123"'
+        assert model.required is True
 
     def test_create_from_dict_with_group(self):
         question_dict = {

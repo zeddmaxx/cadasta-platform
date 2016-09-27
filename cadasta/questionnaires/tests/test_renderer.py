@@ -11,6 +11,9 @@ class XFormRendererTest(TestCase):
             'type': "S1",
             'required': True,
             'constraint': None,
+            'default': 'some default',
+            'hint': 'An informative hint',
+            'relevant': '${party_id}="abc123"',
             'options': [{
                 'id': "d9pkepyjg4sgaepdytgwkgfv",
                 'name': "WR",
@@ -38,6 +41,9 @@ class XFormRendererTest(TestCase):
                 assert q['type'] == 'select one'
                 assert q['choices'] == questions[0]['options']
                 assert q['bind']['required'] == 'yes'
+                assert q['bind']['relevant'] == '${party_id}="abc123"'
+                assert q['default'] == 'some default'
+                assert q['hint'] == 'An informative hint'
 
     def test_transform_groups(self):
         groups = [{

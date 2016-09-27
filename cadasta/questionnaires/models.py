@@ -90,6 +90,9 @@ class Question(RandomIDModel):
     label = models.CharField(max_length=2500, null=True, blank=True)
     type = models.CharField(max_length=2, choices=TYPE_CHOICES)
     required = models.BooleanField(default=False)
+    default = models.CharField(max_length=100, null=True, blank=True)
+    hint = models.CharField(max_length=2500, null=True, blank=True)
+    relevant = models.CharField(max_length=100, null=True, blank=True)
     constraint = models.CharField(max_length=50, null=True, blank=True)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questions')
     question_group = models.ForeignKey(QuestionGroup,

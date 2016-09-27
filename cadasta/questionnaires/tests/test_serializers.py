@@ -110,7 +110,11 @@ class QuestionGroupSerializerTest(TestCase):
 
 class QuestionSerializerTest(TestCase):
     def test_serialize(self):
-        question = factories.QuestionFactory.create()
+        question = factories.QuestionFactory.create(
+            default='some default',
+            hint='An informative hint',
+            relevant='${party_id}="abc123"'
+        )
         serializer = serializers.QuestionSerializer(question)
 
         assert serializer.data['id'] == question.id
@@ -119,6 +123,9 @@ class QuestionSerializerTest(TestCase):
         assert serializer.data['type'] == question.type
         assert serializer.data['required'] == question.required
         assert serializer.data['constraint'] == question.constraint
+        assert serializer.data['default'] == question.default
+        assert serializer.data['hint'] == question.hint
+        assert serializer.data['relevant'] == question.relevant
         assert 'options' not in serializer.data
         assert 'questionnaire' not in serializer.data
         assert 'question_group' not in serializer.data
