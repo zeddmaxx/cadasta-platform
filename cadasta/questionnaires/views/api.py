@@ -3,21 +3,24 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from tutelary.mixins import APIPermissionRequiredMixin
 
 from organization.models import Project
 from ..models import Questionnaire
 from ..serializers import QuestionnaireSerializer
 from ..exceptions import InvalidXLSForm
+from ..renderer.xform import XFormRenderer
 
 
 class QuestionnaireDetail(APIPermissionRequiredMixin,
                           mixins.CreateModelMixin,
                           generics.RetrieveUpdateAPIView):
+    renderer_classes = (JSONRenderer, XFormRenderer, )
+
     def patch_actions(self, request):
         try:
             self.get_object()
-            # return ('questionnaire.edit')
         except Questionnaire.DoesNotExist:
             return ('questionnaire.add')
 

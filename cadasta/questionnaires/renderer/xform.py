@@ -8,11 +8,15 @@ QUESTION_TYPES = dict(Question.TYPE_CHOICES)
 
 class XFormRenderer(BaseRenderer):
     format = 'xform'
+    media_type = 'application/xml'
 
     def transform_questions(self, questions):
         children = []
         for q in questions:
             q['type'] = QUESTION_TYPES[q['type']]
+
+            if q['label'] is None:
+                del q['label']
 
             if 'options' in q:
                 q['choices'] = q['options']
@@ -38,6 +42,8 @@ class XFormRenderer(BaseRenderer):
                 'label': g.get('label'),
                 'children': self.transform_questions(g.get('questions'))
             }
+            if group['label'] is None:
+                del group['label']
             transformed_groups.append(group)
         return transformed_groups
 
@@ -71,7 +77,7 @@ class XFormRenderer(BaseRenderer):
         )
         return xml
 
-    def render(self, data, **kwargs):
+    def render(self, data, *args, **kwargs):
         json = self.transform_to_xform_json(data)
         survey = create_survey_element_from_dict(json)
         xml = survey.xml().toxml()

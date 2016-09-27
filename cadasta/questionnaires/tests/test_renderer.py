@@ -37,6 +37,7 @@ class XFormRendererTest(TestCase):
         for q in transformed:
             if q['name'] == 'start':
                 assert q['type'] == 'start'
+                assert 'label' not in q
             elif q['name'] == 'tenure_type':
                 assert q['type'] == 'select one'
                 assert q['choices'] == questions[0]['options']
@@ -59,7 +60,7 @@ class XFormRendererTest(TestCase):
         }, {
             'id': '456',
             'name': 'group_2',
-            'label': 'Group 2',
+            'label': None,
             'questions': [{
                 'id': "xp8vjr6dsk46p47u22fft7bg",
                 'name': "tenure_type",
@@ -73,6 +74,8 @@ class XFormRendererTest(TestCase):
         for g in transformed:
             assert g['type'] == 'group'
             assert len(g['children']) == 1
+            if g['name'] == 'group_2':
+                assert 'label' not in g
 
     def test_transform_to_xform_json(self):
         data = {
